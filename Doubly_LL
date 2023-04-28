@@ -1,0 +1,136 @@
+#include<stdio.h>
+#include<stdlib.h>
+typedef struct nodeType
+{
+    struct nodeType *prev;
+    int info;
+    struct nodeType *next;
+}node;
+void insertFromBegining(node **,int ,node **);
+void reverseTraversal(node *);
+ void insertFromEnd(node **,int,node **);
+  void normalTraversal(node *);
+  void  deleteFromBegin(node **);
+  void  deleteFromEnd(node **);
+int main()
+{
+    int n,item;
+    node *head=NULL;
+    node *tail=NULL;
+    while(1)
+    {   printf("enter the code for operation");
+        scanf("%d",&n);
+        switch(n)
+        {
+            case 1:
+            printf("enter the value to store");
+            scanf("%d",&item);
+            insertFromBegining(&head,item,&tail);
+            break;
+            case 2:
+            printf("enter the value to store");
+            scanf("%d",&item);
+            insertFromEnd(&head,item,&tail);
+            break;
+            case 3:
+            reverseTraversal(tail);
+            break;
+            case 4:
+            normalTraversal(head);
+            break;
+            case 5:
+            deleteFromBegin(&head);
+            break;
+            case 6:
+            deleteFromEnd(&tail);
+            break;
+            default:
+            exit(0);
+        }
+    }
+    return 0;
+}
+void insertFromBegining(node **head,int item,node **tail)
+{
+    node *ptr;
+    ptr=(node *)malloc(sizeof(node));
+    ptr->info=item;
+    if(*head==NULL)
+    {
+        ptr->next=ptr->prev=NULL;
+        *head=*tail=ptr;
+    }
+    else
+    {
+         ptr->next=*head;
+         (*head)->prev=ptr;
+         ptr->prev=NULL;
+         *head=ptr;
+    }
+}
+void reverseTraversal(node *tail)
+{
+    while(tail!=NULL)
+    {
+        printf("%d\n",tail->info);
+        tail=tail->prev;
+    }
+}
+ void insertFromEnd(node **head,int item,node **tail)
+ {
+   node *ptr;
+   ptr=(node *)malloc(sizeof(node));
+   ptr->info=item;
+   if(*head==NULL)
+    {
+        ptr->next=ptr->prev=NULL;
+        *head=*tail=ptr;
+    }
+    else
+    {
+        ptr->next=NULL;
+        ptr->prev=*tail;
+        (*tail)->next=ptr;
+        *tail=ptr;
+        
+    }
+ }
+ void normalTraversal(node *head)
+{
+    while(head!=NULL)
+    {
+        printf("%d\n",head->info);
+        head=head->next;
+    }
+}
+void  deleteFromBegin(node **head)
+{
+    node *temp;
+    if((*head)->next==NULL)
+    {
+        free(*head);
+        *head=NULL;
+    }
+    else
+    {
+     temp=*head;
+     *head=(*head)->next;
+     free(temp);
+    }
+}
+void  deleteFromEnd(node **tail)
+{
+    node *temp;
+    if((*tail)->prev==NULL)
+    {
+        free(*tail);
+        *tail=NULL;
+    }
+    else
+    {
+     temp=*tail;
+     *tail=(*tail)->prev;
+     free(temp);
+     (*tail)->next=NULL;
+    }
+}
