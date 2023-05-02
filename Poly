@@ -1,0 +1,179 @@
+#include<stdio.h>
+#include<stdlib.h>
+
+typedef struct NodeType
+{
+	int coff;
+	int pow;
+	struct NodeType* next;
+}node;
+node* linearSearch(node *,int );
+
+void createPoly(node **poly,int coff,int pow)
+{
+        node* ptr = (node*)malloc(sizeof(node));
+    	ptr->coff = coff;
+		ptr->pow = pow;
+    if((*poly)==NULL)
+    {
+	  *poly = ptr;
+	   ptr-> next = NULL;
+    }
+    else
+    {
+       ptr->next=(*poly);
+       *poly=ptr;
+    }
+}
+
+void displayPoly(node *poly)
+{
+    printf("\nPolynomial expression is: ");
+	while(poly != NULL)
+	{
+		printf("%dX^%d", poly->coff, poly->pow);
+		poly = poly->next;
+		if(poly != NULL)
+			printf("+");
+	}
+	printf("\n");
+}
+
+void addPoly(node **poly3,node *poly1,node *poly2)
+{
+    int coff,pow;
+    while(poly1!=NULL&&poly2!=NULL)
+    {
+        if(poly1->pow >poly2->pow)
+ 		{
+ 			coff= poly1->coff;
+ 			pow = poly1->pow;
+ 			poly1 = poly1->next;
+ 		}
+ 		else if(poly1->pow < poly2->pow)
+ 		{
+ 			coff = poly2->coff;
+ 			pow = poly2->pow;
+ 			poly2 = poly2->next;
+ 		}
+ 		else
+ 		{
+ 			coff = poly1->coff + poly2->coff;
+ 			pow = poly1->pow;
+ 			poly1 = poly1->next;
+ 			poly2 = poly2->next;
+ 		}
+       createPoly(poly3,coff,pow);
+    }
+    if(poly1!=NULL)
+        {
+            coff = poly1->coff;
+ 			pow = poly1->pow;
+ 			poly1 = poly1->next;
+ 		    createPoly(poly3,coff,pow);
+ 		}
+ 		else if(poly2!=NULL)
+ 		{
+ 			coff = poly2->coff;
+ 			pow = poly2->pow;
+ 			poly2 = poly2->next;
+ 			createPoly(poly3,coff,pow);
+ 		}
+}
+
+void mulPoly(node **poly4,node *poly1,node *poly2)
+{
+    int c,p;
+    node *ptr1, *ptr2, *loc;
+    ptr1=poly1;
+    while(ptr1!=NULL)
+    {
+        ptr2=poly2;
+        while(ptr2!=NULL)
+        {
+            c=(ptr1->coff)*(ptr2->coff);
+            p=(ptr1->pow)+(ptr2->pow);
+            loc=linearSearch(poly4,p);
+            if(loc==NULL)
+            {
+                createPoly(poly4,c,p);
+            }
+            else
+            {
+                loc->coff=loc->coff+c;
+            }
+                ptr2=ptr2->next;
+        }
+        ptr1=ptr1->next;
+    }
+}
+
+node* linearSearch(node *poly,int p)
+{
+    node *ptr;
+    ptr=poly;
+    if(ptr->pow==p)
+    {
+        return ptr;
+    }
+    else
+    {
+        return NULL;
+    }
+}
+int main()
+{
+    int n;
+	node* poly1 = NULL;
+	node* poly2 = NULL;
+	node* poly3 = NULL;
+	node* poly4 = NULL;
+     while(1)
+    {   printf("enter the code for operation");
+        scanf("%d",&n);
+        switch(n)
+        {
+    case 1:
+    int cont,coff,pow;
+	printf("\nEnter the corresponding data:-\n");
+	printf("\nFirst polynomial:\n");
+	do{
+	    printf("\n Coeffecient: ");
+		scanf("%d", &coff);
+		printf("\n Power: ");
+		scanf("%d", &pow);
+		createPoly(&poly1,coff,pow);
+		printf("\nHave more terms? 1 for yes and 0 for no ");
+		scanf("%d", &cont);
+	}while(cont);
+	displayPoly(poly1);
+	
+	printf("\nSecond polynomial:\n");
+	do{
+	    printf("\n Coeffecient: ");
+		scanf("%d", &coff);
+		printf("\n Power: ");
+		scanf("%d", &pow);
+		createPoly(&poly2,coff,pow);
+		printf("\nHave more terms? 1 for yes and 0 for no ");
+		scanf("%d", &cont);
+	}while(cont);
+	displayPoly(poly2);
+	break;
+	
+	case 2:
+	addPoly(&poly3,poly1,poly2);
+	printf("Result is:\n");
+	displayPoly(poly3);
+	break;
+	case 3:
+	mulPoly(&poly4,poly1,poly2);
+	printf("Result is:\n");
+	displayPoly(poly4);
+	break;
+	default:
+	exit(0);
+	return 0;
+        }
+    }
+}
