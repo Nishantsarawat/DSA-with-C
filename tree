@@ -1,0 +1,126 @@
+#include<stdio.h>
+#include<stdlib.h>
+typedef struct nodeType
+{
+    struct nodeType *left;
+    int info;
+    struct nodeType *right;
+}bst;
+
+void preOrderTraversal(bst *);
+void postOrderTraversal(bst *);
+void inOrderTraversal(bst *);
+void insertion(bst **,int );
+bst * search(bst *,int);
+void main()
+{
+    int n,item,cont;
+    bst *root=NULL;
+    while(1)
+    {
+        printf("\nenter the operation to perform");
+        scanf("%d",&n);
+        switch(n)
+        {
+            case 1:
+            do{
+	        printf("enter the element to store");
+            scanf("%d",&item);
+            insertion(&root,item);
+		  printf("\nHave more terms? 1 for yes and 0 for no ");
+		   scanf("%d", &cont);
+	   }while(cont);
+            break;
+            case 2:
+            if(root==NULL)
+            printf("There is no data\n");
+            else
+            preOrderTraversal(root);
+            break;
+            case 3:
+            if(root==NULL)
+            printf("There is no data\n");
+            else
+            postOrderTraversal(root);
+            break;
+            case 4:
+            if(root==NULL)
+            printf("There is no data\n");
+            else
+            inOrderTraversal(root);
+            break;
+            case 5:
+            printf("enter item to search");
+            scanf("%d",&item);
+            bst *ans=search(root,item);
+            printf("%d",ans->info);
+            break;
+            default:
+            exit(0);
+        }
+    }
+}
+void preOrderTraversal(bst *root)
+{
+    if(root!=NULL)
+    {
+        printf("%d",root->info);
+         preOrderTraversal(root->left);
+          preOrderTraversal(root->right);
+    }
+}
+void postOrderTraversal(bst *root)
+{
+    if(root!=NULL)
+    {
+         postOrderTraversal(root->left);
+         postOrderTraversal(root->right);
+         printf("%d",root->info);
+    }
+}
+void inOrderTraversal(bst *root)
+{
+    if(root!=NULL)
+    {
+         inOrderTraversal(root->left);
+         printf("%d",root->info);
+         inOrderTraversal(root->right);
+    }
+}
+void insertion(bst **root,int item)
+{
+    bst *ptr,*parent,*loc;
+    ptr=(bst *)malloc(sizeof(bst));
+    ptr->info=item;
+    ptr->left=ptr->right=NULL;
+    if(*root==NULL)
+    *root=ptr;
+    else
+    {
+       loc=*root;
+       while(loc!=NULL)
+       {
+           parent =loc;
+           if(item>loc->info)
+           loc=loc->right;
+           else
+           loc=loc->left;
+       }
+       if(item>parent->info)
+       parent->right=ptr;
+       else
+       parent->left=ptr;
+    }
+}
+bst *search(bst *root,int item)
+{
+    if(root==NULL||root->info==item)
+    return root;
+    else
+    {
+        if(item>root->info)
+        search(root->right,item);
+        else
+        search(root->left,item);
+    }
+}
